@@ -8,13 +8,6 @@ init_tasklog
 usage ()
 {
     echo "Usage: "`basename $0`" [OPTIONS] <task|action>"
-    echo "Options are:"
-    echo "    -h        show help"
-    echo "    -v        verbosity"
-    echo "    -m        use merge strategy instead of rebasing"
-    echo "    -cn       do not update the cvs repository"
-    echo "    -V        show version information"
-    echo
     exit 127
 }
 
