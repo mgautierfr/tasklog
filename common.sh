@@ -1,9 +1,14 @@
 #!/bin/sh
 
+if [[ "x$PROJECTDIR" == "x" ]]
+then
+	PROJECTDIR=~/.tasklog
+fi
+
 create_depot ()
 {
-	mkdir depot
-	cd depot
+	mkdir $PROJECTDIR
+	cd $PROJECTDIR
 	git init -q
 	git commit --allow-empty -q -m "creating project"
 	git tag "root"
@@ -11,11 +16,11 @@ create_depot ()
 
 init_tasklog ()
 {
-	if [ ! -e depot ]
+	if [ ! -e $PROJECTDIR ]
 	then
 		create_depot
 	else
-		cd depot
+		cd $PROJECTDIR
 	fi
 }
 
