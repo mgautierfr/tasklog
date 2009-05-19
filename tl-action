@@ -17,31 +17,6 @@ usage ()
     exit 127
 }
 
-list_action ()
-{
-	git log $1 --pretty=tformat:"%Cblueaction: %Creset%s%n%Cbluedetails:%Creset%n%b" --
-}
-
-create_action ()
-{
-	if [[ `git branch --no-color | awk '{print $NF}' | grep $1` != "$1" ]] 
-	then
-		echo "no task named $1"
-		exit
-	fi
-	git checkout $1 1>/dev/null 2>&1
-	read message
-	message="$message\n"
-	read line
-	until [[ $line == "" ]]
-	do
-		message="$message\n$line"
-		read line
-	done
-	git commit --allow-empty -q -m "`echo -e $message`"
-}
-
-
 function=usage
 
 case "$1" in

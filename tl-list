@@ -1,8 +1,9 @@
 #!/bin/sh
 # Copyright (c) 2009 Matthieu Gautier <mgautier at fedoraproject dot org>
 
+source common.sh
 
-cd depot
+init_tasklog
 
 usage ()
 {
@@ -17,24 +18,17 @@ usage ()
     exit 127
 }
 
-list_task ()
-{
-	git branch
-}
-
-list_action ()
-{
-	git log
-}
-
-
-test $# != 1 && usage
+function=usage
 
 case "$1" in
 	"task")
-		list_task
+		function=list_task
+		shift
 		;;
 	"action")
-		list_action
+		function=list_action
+		shift
 		;;
 esac
+
+$function $@
