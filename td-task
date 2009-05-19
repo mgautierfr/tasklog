@@ -1,0 +1,69 @@
+#!/bin/sh
+
+source common.sh
+
+init_tasklog
+
+usage ()
+{
+    echo "Usage: "`basename $0`" [OPTIONS] <task|action>"
+    echo "Options are:"
+    echo "    -h        show help"
+    echo "    -v        verbosity"
+    echo "    -m        use merge strategy instead of rebasing"
+    echo "    -cn       do not update the cvs repository"
+    echo "    -V        show version information"
+    echo
+    exit 127
+}
+
+list_task ()
+{
+	git branch --no-color | awk '{print $NF}' | grep -v master
+}
+
+create_task ()
+{
+	if [[ `git branch --no-color | awk '{print $NF}' | grep -w $1` == "$1" ]] 
+	then
+		echo "task named $1 already exist"
+		exit
+	fi
+	test $# != 1 && usage
+	git checkout -q -b $1 root
+	git commit --allow-empty -q -m "Creating task $1"
+}
+
+close_task ()
+{
+	if [[ `git branch --no-color | awk '{print $NF}' | grep -w $1` != "$1" ]] 
+	then
+		echo "no task named $1"
+		exit
+	fi
+	git tag $1 $1
+	git checkout -q master
+	git merge -s ours --no-ff -m "Closing task $1" `git-show-ref --hash --heads $1` 1>/dev/null 2>&1
+	git branch -d $1 1>/dev/null 2>&1
+}
+
+
+function=usage
+
+case "$1" in
+	"create")
+		function=create_task
+		shift
+		;;
+	"list")
+		function=list_task
+		shift
+		;;
+	"close")
+		function=close_task
+		shift
+		;;
+esac
+
+$function $@
+

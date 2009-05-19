@@ -1,0 +1,40 @@
+#!/bin/sh
+# Copyright (c) 2009 Matthieu Gautier <mgautier at fedoraproject dot org>
+
+
+cd depot
+
+usage ()
+{
+    echo "Usage: "`basename $0`" [OPTIONS] <task|action>"
+    echo "Options are:"
+    echo "    -h        show help"
+    echo "    -v        verbosity"
+    echo "    -m        use merge strategy instead of rebasing"
+    echo "    -cn       do not update the cvs repository"
+    echo "    -V        show version information"
+    echo
+    exit 127
+}
+
+list_task ()
+{
+	git branch
+}
+
+list_action ()
+{
+	git log
+}
+
+
+test $# != 1 && usage
+
+case "$1" in
+	"task")
+		list_task
+		;;
+	"action")
+		list_action
+		;;
+esac
